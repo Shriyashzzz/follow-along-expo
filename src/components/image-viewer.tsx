@@ -7,11 +7,9 @@ type Props = {
 
 export default function ImageViewer({ imgSource }: Props) {
   return (
-    <>
-      <Image
-        source={imgSource}
-        style={{ width: 320, height: 440, borderRadius: 18 }}
-      />{" "}
-    </>
+    <Image
+      source={imgSource}
+      style={{ width: 320, height: 440, borderRadius: 18 }}
+    />
   );
 }

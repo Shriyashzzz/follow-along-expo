@@ -11,7 +11,7 @@ export default function Index() {
       </View>
       <View>
         <Button
-          onClick={() => {}}
+          onClick={() => alert("This is the Primary Button")}
           label="Choose a photo"
           textStyle="text-black text-xl"
           primary={true}
@@ -19,7 +19,7 @@ export default function Index() {
         />
         <Button
           label="Use this photo"
-          onClick={() => {}}
+          onClick={() => alert("this is the secindary button")}
           textStyle="text-white text-xl"
         />
       </View>

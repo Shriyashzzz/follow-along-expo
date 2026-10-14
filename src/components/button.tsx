@@ -21,10 +21,13 @@ export default function Button({
   return (
     <View className={`w-80  h-15 flex justify-center items-center `}>
       {primary && (
-        <View className="flex justify-center items-center w-full h-full rounded-xl flex-row gap-2 bg-amber-50">
+        <Pressable
+          onPress={() => onClick()}
+          className="flex justify-center items-center w-full h-full rounded-xl flex-row gap-2 bg-amber-50"
+        >
           {iconName && <Ionicons name={iconName} size={20} />}
           <Text className={textStyle}>{label}</Text>
-        </View>
+        </Pressable>
       )}
       {!primary && (
         <Pressable
