@@ -23,7 +23,7 @@ export default function Button({
       {primary && (
         <Pressable
           onPress={() => onClick()}
-          className="flex justify-center items-center w-full h-full rounded-xl flex-row gap-2 bg-amber-50"
+          className="flex justify-center items-center w-full h-full rounded-xl flex-row gap-2 bg-amber-50  border-3 border-amber-400"
         >
           {iconName && <Ionicons name={iconName} size={20} />}
           <Text className={textStyle}>{label}</Text>
