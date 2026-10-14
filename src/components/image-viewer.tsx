@@ -1,0 +1,17 @@
+import { Image } from "expo-image";
+import { ImageSourcePropType } from "react-native";
+
+type Props = {
+  imgSource: ImageSourcePropType;
+};
+
+export default function ImageViewer({ imgSource }: Props) {
+  return (
+    <>
+      <Image
+        source={imgSource}
+        style={{ width: 320, height: 440, borderRadius: 18 }}
+      />{" "}
+    </>
+  );
+}
