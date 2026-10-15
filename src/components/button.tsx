@@ -19,6 +19,7 @@ type Props = {
   iconName?: IoniconsIconName;
   width?: number;
   rounded?: keyof typeof roundedMap;
+  border?: boolean;
 };
 
 export default function Button({
@@ -29,12 +30,14 @@ export default function Button({
   iconName,
   width = 320,
   rounded = "xl",
+  border,
 }: Props) {
-  const height: number = rounded == "circle" ? width : 320;
+  const height: number = rounded == "circle" ? width : 60;
+  const borderStyle = `border-yellow-600 border-3 p-0.5 ${roundedMap[rounded]}`;
   return (
     <View
       style={{ width, height }}
-      className={`justify-center items-center border-3 p-0.5 border-yellow-600 ${roundedMap[rounded]}`}
+      className={`justify-center items-center ${border && borderStyle}`}
     >
       {primary ? (
         <Pressable

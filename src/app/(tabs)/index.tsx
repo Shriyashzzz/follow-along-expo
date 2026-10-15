@@ -47,11 +47,16 @@ export default function Index() {
         />
       </View>
       {showAppOptions && (
-        <View className="flex justify-center flex-row gap-9 items-center p-2 w-full">
+        <View className="flex justify-between flex-row items-center p-2 w-77.5">
           <IconButton
             label={"Reset"}
             iconName="refresh-outline"
-            onClick={() => alert("reset button")}
+            onClick={() =>
+              alert(() => {
+                setShowAppOptions(false);
+                setSelectedImage(undefined);
+              })
+            }
           />
           <Button
             label=""
@@ -60,6 +65,7 @@ export default function Index() {
             primary={true}
             width={70}
             rounded="circle"
+            border={true}
           />
           <IconButton
             label={"Save"}
