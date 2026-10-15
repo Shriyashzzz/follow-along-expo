@@ -32,11 +32,14 @@ export default function Button({
 }: Props) {
   const height: number = rounded == "circle" ? width : 320;
   return (
-    <View style={{ width, height }} className={`justify-center items-center`}>
+    <View
+      style={{ width, height }}
+      className={`justify-center items-center border-3 p-0.5 border-yellow-600 ${roundedMap[rounded]}`}
+    >
       {primary ? (
         <Pressable
           onPress={onClick}
-          className={`w-full h-full flex-row justify-center items-center ${label && `gap-2`}  bg-gray-200 border-3 border-sky-900  ${roundedMap[rounded]}`}
+          className={`w-full h-full flex-row justify-center items-center ${label && `gap-2`}  bg-gray-200  p-1 ${roundedMap[rounded]} `}
         >
           {iconName && <Ionicons name={iconName} size={20} />}
           <Text className={textStyle}>{label}</Text>
