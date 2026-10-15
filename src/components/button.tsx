@@ -3,12 +3,22 @@ import Ionicons, {
 } from "@react-native-vector-icons/ionicons";
 import { Pressable, Text, View } from "react-native";
 
+const roundedMap = {
+  xl: "rounded-xl",
+  "2xl": "rounded-2xl",
+  "3xl": "rounded-3xl",
+  "4xl": "rounded-4xl",
+  circle: "rounded-full",
+} as const;
+
 type Props = {
   label: string;
   onClick: () => void;
   textStyle?: string;
   primary?: boolean;
   iconName?: IoniconsIconName;
+  width?: number;
+  rounded?: keyof typeof roundedMap;
 };
 
 export default function Button({
@@ -17,24 +27,26 @@ export default function Button({
   textStyle,
   primary,
   iconName,
+  width = 320,
+  rounded = "xl",
 }: Props) {
+  const height: number = rounded == "circle" ? width : 320;
   return (
-    <View className={`w-80  h-15 flex justify-center items-center `}>
-      {primary && (
+    <View style={{ width, height }} className={`justify-center items-center`}>
+      {primary ? (
         <Pressable
-          onPress={() => onClick()}
-          className="flex justify-center items-center w-full h-full rounded-xl flex-row gap-2 bg-amber-50  border-3 border-amber-400"
+          onPress={onClick}
+          className={`w-full h-full flex-row justify-center items-center ${label && `gap-2`}  bg-gray-200 border-3 border-sky-900  ${roundedMap[rounded]}`}
         >
           {iconName && <Ionicons name={iconName} size={20} />}
           <Text className={textStyle}>{label}</Text>
         </Pressable>
-      )}
-      {!primary && (
+      ) : (
         <Pressable
-          onPress={() => onClick()}
-          className="flex w-full h-full justify-center items-center"
+          onPress={onClick}
+          className="w-full h-full justify-center items-center"
         >
-          <Text className={`${textStyle}`}>{label}</Text>
+          <Text className={textStyle}>{label}</Text>
         </Pressable>
       )}
     </View>
