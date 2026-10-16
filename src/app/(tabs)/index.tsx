@@ -2,17 +2,22 @@ import PlaceHolderImage from "@/assets/images/background-image.png";
 import Button from "@/components/button";
 import EmojiList from "@/components/emojiList";
 import EmojiPicker from "@/components/emojiPicker";
+import EmojiSticker from "@/components/emojiSticker";
 import IconButton from "@/components/iconButton";
 import ImageViewer from "@/components/image-viewer";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
-import { View } from "react-native";
+import { ImageSourcePropType, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 export default function Index() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>();
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
   const [isEmojiVisible, setEmojiIsVisible] = useState<boolean>(false);
+  const [pickedEmoji, setPickedEmoji] = useState<
+    ImageSourcePropType | undefined
+  >(undefined);
+
   const pickImage = async () => {
     const asyncImageResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
@@ -61,6 +66,9 @@ export default function Index() {
           imgSource={PlaceHolderImage}
           selectedImage={selectedImage}
         />
+        {pickedEmoji && (
+          <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />
+        )}
       </View>
       {showAppOptions && (
         <View className="flex justify-between flex-row items-center p-2 w-77.5">
@@ -104,7 +112,7 @@ export default function Index() {
       <EmojiPicker isVisible={isEmojiVisible} onClose={onCloseEmojiPicker}>
         <EmojiList
           onCloseModal={() => onCloseEmojiPicker()}
-          onSelect={() => alert("yo")}
+          onSelect={setPickedEmoji}
         />
       </EmojiPicker>
       <Toast position="bottom" bottomOffset={20} />

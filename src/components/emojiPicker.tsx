@@ -12,7 +12,7 @@ export default function EmojiPicker({ isVisible, children, onClose }: Props) {
     <View>
       <Modal animationType="slide" transparent={true} visible={isVisible}>
         <View className="flex w-full h-full justify-end  ">
-          <View className="pb-25  bg-gray-700 ">
+          <View className="pb-25 bg-gray-700 ">
             <View className="flex flex-row  w-full justify-between p-3 bg-gray-600 mb-5 items-start rounded-xl h-fit">
               <Text className="text-white text-xl">Choose a Sticker! </Text>
               <Pressable onPress={onClose}>
