@@ -6,12 +6,16 @@ import EmojiSticker from "@/components/emojiSticker";
 import IconButton from "@/components/iconButton";
 import ImageViewer from "@/components/image-viewer";
 import * as ImagePicker from "expo-image-picker";
-import { useRef, useState } from "react";
+import * as MediaLibrary from "expo-media-library";
+import { useEffect, useRef, useState } from "react";
 import { ImageSourcePropType, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
-
+import { captureRef } from "react-native-view-shot";
 export default function Index() {
+  const [permissionResponse, requestPermission] =
+    ImagePicker.useMediaLibraryPermissions();
+
   const [selectedImage, setSelectedImage] = useState<string | undefined>();
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
   const [isEmojiVisible, setEmojiIsVisible] = useState<boolean>(false);
@@ -19,7 +23,11 @@ export default function Index() {
   const [pickedEmoji, setPickedEmoji] = useState<
     ImageSourcePropType | undefined
   >(undefined);
-
+  useEffect(() => {
+    if (!permissionResponse?.granted) {
+      requestPermission();
+    }
+  }, []);
   const pickImage = async () => {
     const asyncImageResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
@@ -57,7 +65,29 @@ export default function Index() {
   const onAddEmoji = () => {
     setEmojiIsVisible(true);
   };
-  const onSaveImage = () => {};
+  const onSaveImage = async () => {
+    try {
+      const locationUri = await captureRef(imageContainer, {
+        height: imageContainer.current?.getBoundingClientRect().height,
+        quality: 1,
+      });
+
+      let album = await MediaLibrary.Album.get("StickerSmash");
+      const asset = await MediaLibrary.Asset.create(locationUri);
+      if (!album) {
+        album = await MediaLibrary.Album.create("StickerSmash", [asset]);
+      } else {
+        album.add([asset]);
+      }
+      Toast.show({
+        type: "success",
+        text1: "Saved to Photos",
+        text1Style: { fontSize: 10 },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const onCloseEmojiPicker = () => {
     setEmojiIsVisible(false);
@@ -66,13 +96,16 @@ export default function Index() {
   return (
     <GestureHandlerRootView>
       <View className="h-full flex justify-center bg-gray-500 items-center w-full">
-        <View className="w-[320px] h-110 mb-2 ">
-          <View ref={imageContainer} className="h-fit w-fit">
-            <ImageViewer
-              imgSource={PlaceHolderImage}
-              selectedImage={selectedImage}
-            />
-          </View>
+        <View
+          ref={imageContainer}
+          collapsable={false}
+          className="w-[320px] h-110 mb-2 "
+        >
+          <ImageViewer
+            imgSource={PlaceHolderImage}
+            selectedImage={selectedImage}
+          />
+
           {pickedEmoji && (
             <EmojiSticker imageSize={40} stickerSource={pickedEmoji} />
           )}
@@ -96,7 +129,7 @@ export default function Index() {
             <IconButton
               label={"Save"}
               iconName="download-outline"
-              onClick={() => alert("save button")}
+              onClick={onSaveImage}
             />
           </View>
         )}
@@ -111,7 +144,7 @@ export default function Index() {
             />
             <Button
               label="Use this photo"
-              onClick={() => alert("this is the secindary button")}
+              onClick={() => alert("this is the secondary button")}
               textStyle="text-white text-xl"
             />
           </View>
