@@ -6,6 +6,7 @@
     "@expo/ui": "~57.0.23",
     "@react-native-vector-icons/ionicons": "^13.1.5",
     "@react-native-vector-icons/lucide": "^13.1.5",
+    "dom-to-image": "^2.6.0",
     "expo": "~57.0.28",
     "expo-constants": "~57.0.21",
     "expo-device": "~57.0.2",
@@ -36,6 +37,7 @@
     "uniwind": "^1.12.2"
   },
   "devDependencies": {
+    "@types/dom-to-image": "^2.6.7",
     "@types/react": "~19.2.2",
     "typescript": "~6.0.3"
   },

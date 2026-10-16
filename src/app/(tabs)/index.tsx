@@ -5,13 +5,14 @@ import EmojiPicker from "@/components/emojiPicker";
 import EmojiSticker from "@/components/emojiSticker";
 import IconButton from "@/components/iconButton";
 import ImageViewer from "@/components/image-viewer";
+import domtoimage from "dom-to-image";
 import * as ImagePicker from "expo-image-picker";
-import * as MediaLibrary from "expo-media-library";
 import { useEffect, useRef, useState } from "react";
-import { ImageSourcePropType, View } from "react-native";
+import { ImageSourcePropType, Platform, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import { captureRef } from "react-native-view-shot";
+
 export default function Index() {
   const [permissionResponse, requestPermission] =
     ImagePicker.useMediaLibraryPermissions();
@@ -19,7 +20,7 @@ export default function Index() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>();
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
   const [isEmojiVisible, setEmojiIsVisible] = useState<boolean>(false);
-  const imageContainer = useRef<View>(null);
+  const imageContainer = useRef<View | null>(null);
   const [pickedEmoji, setPickedEmoji] = useState<
     ImageSourcePropType | undefined
   >(undefined);
@@ -66,26 +67,46 @@ export default function Index() {
     setEmojiIsVisible(true);
   };
   const onSaveImage = async () => {
-    try {
-      const locationUri = await captureRef(imageContainer, {
-        height: imageContainer.current?.getBoundingClientRect().height,
-        quality: 1,
-      });
-
-      let album = await MediaLibrary.Album.get("StickerSmash");
-      const asset = await MediaLibrary.Asset.create(locationUri);
-      if (!album) {
-        album = await MediaLibrary.Album.create("StickerSmash", [asset]);
-      } else {
-        album.add([asset]);
+    if (Platform.OS === "web") {
+      try {
+        const node = imageContainer.current as HTMLDivElement | null;
+        if (!node) return;
+        const dataUrl: string = await domtoimage.toJpeg(node, {
+          quality: 1,
+        });
+        var link = document.createElement("a");
+        link.download = `stickerSmash-${Math.floor(Math.random() + 1)}.jpeg`;
+        link.href = dataUrl;
+        link.click();
+        Toast.show({ type: "success", text1: "success" });
+      } catch (e) {
+        console.error(e);
+        Toast.show({ type: "error", text1: "Unable to download Image" });
       }
+    } else if (Platform.OS === "android") {
+      try {
+        const MediaLibrary = await import("expo-media-library");
+        const locationUri = await captureRef(imageContainer, {
+          height: 110,
+          quality: 1,
+        });
+
+        let album = await MediaLibrary.Album.get("StickerSmash");
+        const asset = await MediaLibrary.Asset.create(locationUri);
+        if (!album) {
+          album = await MediaLibrary.Album.create("StickerSmash", [asset]);
+        } else {
+          await album.add([asset]);
+        }
+        Toast.show({ type: "success", text1: "Saved to Photos" });
+      } catch (e) {
+        console.error(e);
+      }
+    } else if (Platform.OS === "ios") {
       Toast.show({
-        type: "success",
-        text1: "Saved to Photos",
-        text1Style: { fontSize: 10 },
+        type: "error",
+        text1: "Saving is not yet available in IOS",
       });
-    } catch (e) {
-      console.error(e);
     }
   };
 
