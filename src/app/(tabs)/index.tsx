@@ -1,5 +1,7 @@
 import PlaceHolderImage from "@/assets/images/background-image.png";
 import Button from "@/components/button";
+import EmojiList from "@/components/emojiList";
+import EmojiPicker from "@/components/emojiPicker";
 import IconButton from "@/components/iconButton";
 import ImageViewer from "@/components/image-viewer";
 import * as ImagePicker from "expo-image-picker";
@@ -10,6 +12,7 @@ import Toast from "react-native-toast-message";
 export default function Index() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>();
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
+  const [isEmojiVisible, setEmojiIsVisible] = useState<boolean>(false);
   const pickImage = async () => {
     const asyncImageResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
@@ -38,6 +41,19 @@ export default function Index() {
     }
   };
 
+  const onResetState = () => {
+    setShowAppOptions(false);
+    setSelectedImage(undefined);
+  };
+  const onAddEmoji = () => {
+    setEmojiIsVisible(true);
+  };
+  const onSaveImage = () => {};
+
+  const onCloseEmojiPicker = () => {
+    setEmojiIsVisible(false);
+  };
+
   return (
     <View className="h-full flex justify-center bg-gray-500 items-center w-full">
       <View className="w-[320px] h-110 mb-2 ">
@@ -51,16 +67,11 @@ export default function Index() {
           <IconButton
             label={"Reset"}
             iconName="refresh-outline"
-            onClick={() =>
-              alert(() => {
-                setShowAppOptions(false);
-                setSelectedImage(undefined);
-              })
-            }
+            onClick={onResetState}
           />
           <Button
             label=""
-            onClick={() => alert("yahoo")}
+            onClick={onAddEmoji}
             iconName="add-outline"
             primary={true}
             width={70}
@@ -90,7 +101,12 @@ export default function Index() {
           />
         </View>
       )}
-
+      <EmojiPicker isVisible={isEmojiVisible} onClose={onCloseEmojiPicker}>
+        <EmojiList
+          onCloseModal={() => onCloseEmojiPicker()}
+          onSelect={() => alert("yo")}
+        />
+      </EmojiPicker>
       <Toast position="bottom" bottomOffset={20} />
     </View>
   );
