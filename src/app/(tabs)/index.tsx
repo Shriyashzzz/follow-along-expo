@@ -44,7 +44,6 @@ export default function Index() {
         swipeable: true,
       });
       setSelectedImage(asyncImageResult.assets[0].uri);
-      setShowAppOptions(true);
     } else {
       Toast.show({
         type: "info",
@@ -165,7 +164,7 @@ export default function Index() {
             />
             <Button
               label="Use this photo"
-              onClick={() => alert("this is the secondary button")}
+              onClick={() => setShowAppOptions(true)}
               textStyle="text-white text-xl"
             />
           </View>
